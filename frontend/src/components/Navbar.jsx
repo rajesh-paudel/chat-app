@@ -8,7 +8,9 @@ export default function Navbar() {
   const { authUser, logout } = useAuthStore();
   return (
     <div className="flex justify-between items-center px-10 py-1 mb-10">
-      <div className="logo font-bold text-2xl">Chat-app</div>
+      <Link to={"/"} className="logo font-bold text-2xl">
+        Chat-app
+      </Link>
       <div className="flex items-center gap-7">
         {authUser && (
           <div className="flex justify-between items-center gap-7">

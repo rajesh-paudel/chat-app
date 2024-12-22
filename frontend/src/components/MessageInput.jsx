@@ -1,11 +1,15 @@
 import React, { useState } from "react";
 import { Send, X } from "lucide-react";
 import { Image } from "lucide-react";
+import { useRef } from "react";
+import { useChatStore } from "../store/useChatStore";
 export default function MessageInput() {
   const [text, setText] = useState("");
   const [imagePreview, setImagePreview] = useState(null);
   const fileInputRef = useRef(null);
-  const { sendMessage } = useChatStore();
+
+  const { sendMessages } = useChatStore();
+
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (!file.type.startsWith("image/")) {
@@ -18,15 +22,17 @@ export default function MessageInput() {
     };
     reader.readAsDataURL(file);
   };
+
   const removeImage = () => {
     setImagePreview(null);
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
+
   const handleSendMessage = async (e) => {
     e.preventDefault();
     if (!text.trim() && !imagePreview) return;
     try {
-      await sendMessage({
+      await sendMessages({
         text: text.trim(),
         image: imagePreview,
       });
@@ -37,6 +43,7 @@ export default function MessageInput() {
       console.log("failed to send message", error);
     }
   };
+
   return (
     <div className="p-4 w-full">
       {imagePreview && (

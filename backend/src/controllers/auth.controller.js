@@ -2,20 +2,21 @@ import { User } from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import { generateToken } from "../lib/utils.js";
 import cloudinary from "../lib/cloudinary.js";
+
 export const signup = async (req, res) => {
-  const { name, email, password } = req.body;
   try {
+    const { name, email, password } = req.body;
     if (!name || !email || !password) {
-      res.status(400).json({ message: "fill up all fields" });
+      return res.status(400).json({ message: "fill up all fields" });
     }
     if (password.length < 6) {
-      res
+      return res
         .status(400)
-        .json({ message: "password elngth should be at least 6 characters" });
+        .json({ message: "password length should be at least 6 characters" });
     }
     const user = await User.findOne({ email });
     if (user) {
-      res.status(400).json({ message: "email already exists" });
+      return res.status(400).json({ message: "email already exists" });
     }
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
@@ -23,52 +24,54 @@ export const signup = async (req, res) => {
     if (newUser) {
       generateToken(newUser._id, res);
       await newUser.save();
-      res.status(201).json({
+      return res.status(201).json({
         _id: newUser._id,
         name: newUser.name,
         email: newUser.email,
       });
     } else {
-      res.status(400).json({ message: "invalid user data" });
+      return res.status(400).json({ message: "invalid user data" });
     }
   } catch (error) {
     console.log("error in signup controller", error);
-    res.status(500).json({ message: "internal server error" });
+    return res.status(500).json({ message: "internal server error" });
   }
 };
 
 export const login = async (req, res) => {
-  const { email, password } = req.body;
   try {
+    const { email, password } = req.body;
     if (!email || !password) {
-      res.status(400).json({ message: "fill up all fields" });
+      return res.status(400).json({ message: "fill up all fields" });
     }
     const user = await User.findOne({ email });
     if (!user) {
-      res.status(400).json({ message: "invalid credentials" });
+      return res.status(400).json({ message: "invalid credentials" });
     }
     const isValid = await bcrypt.compare(password, user.password);
     if (!isValid) {
-      res.status(400).json({ message: "invalid email or password" });
+      return res.status(400).json({ message: "invalid email or password" });
     }
     generateToken(user._id, res);
-    res.status(200).json({
+    return res.status(200).json({
       _id: user._id,
       name: user.name,
       email: user.email,
     });
   } catch (error) {
     console.log("login error", error);
-    res.status(500).json({ message: "internal server error" });
+    return res.status(500).json({ message: "internal server error" });
   }
 };
 
 export const logout = async (req, res) => {
   try {
-    res.cookie("jwt", "", {
-      maxAge: 0,
-    });
-    res.status(200).json({ message: "logout successful" });
+    res
+      .cookie("jwt", "", {
+        maxAge: 0,
+      })
+      .status(200)
+      .json({ message: "logout successful" });
   } catch (error) {
     console.log("logout error", error);
     res.status(500).json({ message: "internal server error" });
@@ -80,7 +83,7 @@ export const updateProfile = async (req, res) => {
     const { profilePic } = req.body;
     const userId = req.user._id;
     if (!profilePic) {
-      res.status(400).json({ message: "profile pic is required" });
+      return res.status(400).json({ message: "profile pic is required" });
     }
     const uploadResponse = await cloudinary.uploader.upload(profilePic);
     const updatedUser = await User.findByIdAndUpdate(
@@ -90,7 +93,7 @@ export const updateProfile = async (req, res) => {
       },
       { new: true }
     );
-    res.status(200).json(updatedUser);
+    return res.status(200).json(updatedUser);
   } catch (error) {
     console.log("upload profile error", error);
     res.status(500).json({ message: "internal server error" });
