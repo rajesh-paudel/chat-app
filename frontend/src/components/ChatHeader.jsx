@@ -12,13 +12,13 @@ export default function ChatHeader() {
           <div className="avatar">
             <div className="size-10 rounded-full relative">
               <img
-                src={selectedUser.profilePic || "avatar.png"}
-                alt={selectedUser.name}
+                src={selectedUser?.profilePic || "avatar.png"}
+                alt={selectedUser?.name}
               ></img>
             </div>
           </div>
           <div>
-            <h3 className="font-medium">{selectedUser.name}</h3>
+            <h3 className="font-medium">{selectedUser?.name}</h3>
             <p className="text-sm text-base-content/70">
               {onlineUsers.includes(selectedUser._id) ? "online" : "offline"}
             </p>
