@@ -3,7 +3,7 @@ import Navbar from "./components/Navbar";
 import Home from "./Pages/Home";
 import SignUp from "./Pages/SignUp";
 import Login from "./Pages/Login";
-
+import { io } from "socket.io-client";
 import Profile from "./Pages/Profile";
 import { useAuthStore } from "./store/useAuthStore";
 import { useEffect } from "react";
@@ -11,8 +11,7 @@ import { Loader } from "lucide-react";
 import { Toaster } from "react-hot-toast";
 
 function App() {
-  const { authUser, login, logout, signup, checkAuth, isCheckingAuth } =
-    useAuthStore();
+  const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
 
   useEffect(() => {
     checkAuth();
