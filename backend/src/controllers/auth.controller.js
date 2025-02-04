@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import { generateToken } from "../lib/utils.js";
 import cloudinary from "../lib/cloudinary.js";
 
+//user signup controller
 export const signup = async (req, res) => {
   try {
     const { name, email, password } = req.body;
@@ -22,12 +23,13 @@ export const signup = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, salt);
     const newUser = new User({ name, email, password: hashedPassword });
     if (newUser) {
-      generateToken(newUser._id, res);
       await newUser.save();
+
       return res.status(201).json({
         _id: newUser._id,
         name: newUser.name,
         email: newUser.email,
+        profilePic: "/avatar.png",
       });
     } else {
       return res.status(400).json({ message: "invalid user data" });
@@ -38,6 +40,8 @@ export const signup = async (req, res) => {
   }
 };
 
+//user login controller
+
 export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -46,7 +50,7 @@ export const login = async (req, res) => {
     }
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(400).json({ message: "invalid credentials" });
+      return res.status(400).json({ message: "invalid email or password" });
     }
     const isValid = await bcrypt.compare(password, user.password);
     if (!isValid) {
@@ -64,6 +68,7 @@ export const login = async (req, res) => {
   }
 };
 
+//user logout controller
 export const logout = async (req, res) => {
   try {
     res
@@ -78,6 +83,7 @@ export const logout = async (req, res) => {
   }
 };
 
+//update profile controller
 export const updateProfile = async (req, res) => {
   try {
     const { profilePic } = req.body;
@@ -101,6 +107,7 @@ export const updateProfile = async (req, res) => {
   }
 };
 
+//controller to check user authentication while app loads
 export const checkAuth = (req, res) => {
   try {
     res.status(200).json(req.user);

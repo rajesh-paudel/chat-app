@@ -3,6 +3,7 @@ import { axiosInstance } from "../lib/axios";
 import toast from "react-hot-toast";
 import { io } from "socket.io-client";
 const baseURL = "http://localhost:3000";
+
 export const useAuthStore = create((set, get) => ({
   authUser: null,
   isSigningUp: false,
@@ -11,10 +12,12 @@ export const useAuthStore = create((set, get) => ({
   isCheckingAuth: true,
   onlineUsers: [],
   socket: null,
+
   checkAuth: async () => {
     try {
       const res = await axiosInstance.get("/auth/check");
       set({ authUser: res.data });
+
       get().connectSocket();
     } catch (error) {
       console.log("error in checkauth", error);
@@ -28,7 +31,7 @@ export const useAuthStore = create((set, get) => ({
       set({ isSigningUp: true });
 
       const res = await axiosInstance.post("/auth/signup", data);
-      set({ authUser: res.data });
+
       get().connectSocket();
       toast.success("Account created successfully");
     } catch (error) {

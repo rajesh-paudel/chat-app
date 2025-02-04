@@ -12,23 +12,36 @@ export default function Login() {
   const onChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+
   const validateForm = () => {
-    if (!formData.email.trim()) return toast.error("Email is required");
-    if (!formData.password.trim()) return toast.error("Password is required");
-    if (formData.password.length < 6)
-      return toast.error("Password must be at least 6 character");
+    if (!formData.email.trim()) {
+      toast.error("Email is required");
+      return false;
+    }
+    if (!formData.password.trim()) {
+      toast.error("Password is required");
+      return false;
+    }
+    if (formData.password.length < 6) {
+      toast.error("Password must be at least 6 character");
+      return false;
+    }
+    return true;
   };
-  const onSubmit = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    validateForm();
-    login(formData);
+
+    //validate form
+    if (validateForm()) {
+      login(formData);
+    }
   };
   return (
     <div>
       <div className="flex flex-col justify-center items-center gap-2">
         <h1 className="text-2xl font-bold">Welcome Back</h1>
         <p>Sign in to your account</p>
-        <form className="flex flex-col gap-1" onSubmit={onSubmit}>
+        <form className="flex flex-col gap-1" onSubmit={handleSubmit}>
           Email
           <input
             className=" border-2 mb-5  border-stone-500 p-2 w-96 rounded-md bg-transparent"
@@ -58,7 +71,7 @@ export default function Login() {
         </form>
         <p>
           Don't have an account ?
-          <Link to="/signUp" className="text-bold text-orange-300">
+          <Link to="/signUp" className="text-bold text-orange-300 ml-1">
             Sign up
           </Link>
         </p>

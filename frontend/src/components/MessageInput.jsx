@@ -10,14 +10,15 @@ export default function MessageInput() {
 
   const { sendMessages } = useChatStore();
 
-  const handleImageChange = (e) => {
+  const handleImageChange = async (e) => {
     const file = e.target.files[0];
+    if (!file) return;
     if (!file.type.startsWith("image/")) {
       toast.error("please select an image file");
       return;
     }
     const reader = new FileReader();
-    reader.onloaded = () => {
+    reader.onloadend = () => {
       setImagePreview(reader.result);
     };
     reader.readAsDataURL(file);
@@ -75,6 +76,7 @@ export default function MessageInput() {
           ></input>
           <input
             type="file"
+            id="image"
             accept="image/*"
             className="hidden"
             ref={fileInputRef}

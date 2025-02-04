@@ -2,7 +2,9 @@ import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { useAuthStore } from "../store/useAuthStore";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 export default function SignUp() {
+  const navigate = useNavigate();
   const { signUp } = useAuthStore();
   const [formData, setFormData] = useState({
     name: "",
@@ -13,16 +15,30 @@ export default function SignUp() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
   const validateForm = () => {
-    if (!formData.name.trim()) return toast.error("Full name is required");
-    if (!formData.email.trim()) return toast.error("Email is required");
-    if (!formData.password.trim()) return toast.error("Password is required");
-    if (formData.password.length < 6)
-      return toast.error("Password must be at least 6 character");
+    if (!formData.name.trim()) {
+      toast.error("name is required");
+      return false;
+    }
+    if (!formData.email.trim()) {
+      toast.error("Email is required");
+      return false;
+    }
+    if (!formData.password.trim()) {
+      toast.error("Password is required");
+      return false;
+    }
+    if (formData.password.length < 6) {
+      toast.error("Password must be at least 6 character");
+      return false;
+    }
+    return true;
   };
   const onSubmit = (e) => {
     e.preventDefault();
-    validateForm();
-    signUp(formData);
+    if (validateForm()) {
+      signUp(formData);
+      navigate("/login");
+    }
   };
 
   return (
@@ -69,8 +85,8 @@ export default function SignUp() {
       </form>
       <p>
         Aready have an account ?
-        <Link to="/login" className="text-bold text-orange-300">
-          Sign in
+        <Link to="/login" className="text-bold text-orange-300 ml-1">
+          Sign In
         </Link>
       </p>
     </div>

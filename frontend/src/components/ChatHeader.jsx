@@ -2,6 +2,7 @@ import React from "react";
 import { X } from "lucide-react";
 import { useAuthStore } from "../store/useAuthStore";
 import { useChatStore } from "../store/useChatStore";
+import { Link } from "react-router-dom";
 export default function ChatHeader() {
   const { selectedUser, setSelectedUser } = useChatStore();
   const { onlineUsers } = useAuthStore();
@@ -18,7 +19,13 @@ export default function ChatHeader() {
             </div>
           </div>
           <div>
-            <h3 className="font-medium">{selectedUser?.name}</h3>
+            <Link
+              to={"/" + selectedUser?.name}
+              state={{ user: selectedUser }}
+              className="font-medium cursor-pointer"
+            >
+              {selectedUser?.name}
+            </Link>
             <p className="text-sm text-base-content/70">
               {onlineUsers.includes(selectedUser._id) ? "online" : "offline"}
             </p>

@@ -9,12 +9,24 @@ const userSchema = mongoose.Schema(
       type: String,
       unique: true,
       required: true,
+      trim: true,
     },
     password: {
       type: String,
-      uminlength: true,
       required: true,
     },
+    friends: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+    friendRequest: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
     profilePic: {
       type: String,
       default: "",
