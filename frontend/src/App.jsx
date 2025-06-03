@@ -12,6 +12,7 @@ import { Toaster } from "react-hot-toast";
 import { useLocation } from "react-router-dom";
 import FriendRequests from "./Pages/friendRequests";
 import Friends from "./Pages/Friends";
+import Notifications from "./Pages/notifications";
 
 function App() {
   const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
@@ -64,6 +65,10 @@ function App() {
         <Route
           path="/friends"
           element={authUser ? <Friends /> : <Navigate to="/login" />}
+        ></Route>
+        <Route
+          path="/notifications"
+          element={authUser ? <Notifications /> : <Navigate to="/login" />}
         ></Route>
       </Routes>
       <Toaster />

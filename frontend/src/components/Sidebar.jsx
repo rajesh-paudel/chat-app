@@ -3,12 +3,9 @@ import { useChatStore } from "../store/useChatStore";
 import { Users } from "lucide-react";
 import { useAuthStore } from "../store/useAuthStore";
 export default function Sidebar() {
-  const { getUsers, users, setSelectedUser, selectedUser } = useChatStore();
+  const { friends: users, setSelectedUser, selectedUser } = useChatStore();
 
   const { onlineUsers } = useAuthStore();
-  useEffect(() => {
-    getUsers();
-  }, [getUsers]);
 
   const handleSelection = (user) => {
     setSelectedUser(user);
@@ -23,10 +20,10 @@ export default function Sidebar() {
         {/* {todo:online filter toggle} */}
       </div>
       <div className="overflow-y-auto w-full py-3">
-        {users.map((user) => {
+        {users?.map((user, index) => {
           return (
             <button
-              key={user._id}
+              key={index}
               onClick={() => handleSelection(user)}
               className={`w-full p-3 flex items-center gap-3 hover:bg-base-300 transition-colors ${
                 selectedUser?._id === user._id

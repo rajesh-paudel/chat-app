@@ -1,5 +1,5 @@
 import { User } from "../models/user.model.js";
-
+import { Notification } from "../models/notification.model.js";
 //returns users list
 export const getUsers = async (req, res) => {
   try {
@@ -32,8 +32,16 @@ export const sendFriendRequest = async (req, res) => {
     if (userToSendRequest.friends.includes(loggedInUserId)) {
       return res.status(400).json({ message: " user is already friend " });
     }
+
+    const newNotification = new Notification({
+      userId: userToSendRequestId,
+      message: `${req.user.name} send you a friend request`,
+    });
+    await newNotification.save();
     await userToSendRequest.updateOne({
-      $push: { friendRequest: loggedInUserId },
+      $push: {
+        friendRequest: loggedInUserId,
+      },
     });
     res.status(200).json({ message: " request sent " });
   } catch (error) {
@@ -54,8 +62,15 @@ export const acceptFriendRequest = async (req, res) => {
     }
     user.friends.push(reqSenderId);
     reqSenderUser.friends.push(loggedInUserId);
-    reqSenderUser.save();
+
     await user.updateOne({ $pull: { friendRequest: reqSenderId } });
+
+    const newNotification = new Notification({
+      userId: reqSenderId,
+      message: `${req.user.name} has accepted your friend request.`,
+    });
+    await newNotification.save();
+    await reqSenderUser.save();
     await user.save();
     res.status(200).json({ message: " request accepted " });
   } catch (error) {
@@ -80,32 +95,32 @@ export const declineFriendRequest = async (req, res) => {
   }
 };
 
-//returns friend request list
-export const getFriendRequests = async (req, res) => {
-  try {
-    const loggedInUserId = req.user._id;
-    const user = await User.findById(loggedInUserId).populate("friendRequest");
+// //returns friend request list
+// export const getFriendRequests = async (req, res) => {
+//   try {
+//     const loggedInUserId = req.user._id;
+//     const user = await User.findById(loggedInUserId).populate("friendRequest");
 
-    const friendRequests = user.friendRequest;
-    res.status(200).json(friendRequests);
-  } catch (error) {
-    console.log("error in fetching friend requests", error);
-    res.status(500).json({ message: "internal server error" });
-  }
-};
+//     const friendRequests = user.friendRequest;
+//     res.status(200).json(friendRequests);
+//   } catch (error) {
+//     console.log("error in fetching friend requests", error);
+//     res.status(500).json({ message: "internal server error" });
+//   }
+// };
 
-//returns friends list
-export const getFriends = async (req, res) => {
-  try {
-    const loggedInUserId = req.user._id;
-    const user = await User.findById(loggedInUserId).populate("friends");
-    const friends = user.friends;
-    res.status(200).json(friends);
-  } catch (error) {
-    console.log("error in fetching friends", error);
-    res.status(500).json({ message: "internal server error" });
-  }
-};
+// //returns friends list
+// export const getFriends = async (req, res) => {
+//   try {
+//     const loggedInUserId = req.user._id;
+//     const user = await User.findById(loggedInUserId).populate("friends");
+//     const friends = user.friends;
+//     res.status(200).json(friends);
+//   } catch (error) {
+//     console.log("error in fetching friends", error);
+//     res.status(500).json({ message: "internal server error" });
+//   }
+// };
 
 //unfriend user
 export const unfriend = async (req, res) => {

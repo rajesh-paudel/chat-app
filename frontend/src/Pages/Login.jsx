@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import toast from "react-hot-toast";
 import { useAuthStore } from "../store/useAuthStore";
 import { Link } from "react-router-dom";
@@ -70,7 +70,7 @@ export default function Login() {
           </button>
         </form>
         <p>
-          Don't have an account ?
+          Don&apos;t have an account ?{" "}
           <Link to="/signUp" className="text-bold text-orange-300 ml-1">
             Sign up
           </Link>

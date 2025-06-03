@@ -11,7 +11,7 @@ const FriendRequests = () => {
   const declineHandle = (userId) => {
     declineFriendRequest(userId);
   };
-  if (friendRequests.length == 0) {
+  if (!friendRequests || friendRequests.length == 0) {
     return (
       <div className="w-full h-80 flex items-center justify-center ">
         <h1 className="text-3xl font-white font-semibold ">

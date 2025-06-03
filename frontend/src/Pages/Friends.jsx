@@ -9,7 +9,7 @@ const Friends = () => {
     unfriend(userId);
   };
 
-  if (friends.length == 0) {
+  if (!friends || friends.length == 0) {
     return (
       <div className="w-full h-80 flex items-center justify-center ">
         <h1 className="text-3xl font-white font-semibold ">No Friends</h1>

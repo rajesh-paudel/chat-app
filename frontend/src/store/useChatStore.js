@@ -8,6 +8,7 @@ export const useChatStore = create((set, get) => ({
   users: [],
   friends: [],
   friendRequests: [],
+  notifications: [],
   selectedUser: null,
   getUsers: async () => {
     try {
@@ -19,22 +20,31 @@ export const useChatStore = create((set, get) => ({
     }
   },
 
-  getFriends: async () => {
+  getUserInfo: async () => {
     try {
-      const res = await axiosInstance.get("/auth/getFriends");
+      const res = await axiosInstance.get("/auth/userInfo");
 
-      set({ friends: res.data });
+      set({ friends: res.data.friends });
+      set({ friendRequests: res.data.friendRequest });
     } catch (error) {
+      console.log(error);
       toast.error(error.response.data.message);
     }
   },
-  getFriendRequests: async () => {
+  getNotifications: async () => {
     try {
-      const res = await axiosInstance.get("/auth/getFriendRequests");
-
-      set({ friendRequests: res.data });
+      const res = await axiosInstance.get("/auth/notifications");
+      set({ notifications: res.data });
     } catch (error) {
+      console.log(error);
       toast.error(error.response.data.message);
+    }
+  },
+  readNotifications: async () => {
+    try {
+      const res = await axiosInstance.get("/auth/readNotifications");
+    } catch (error) {
+      console.log(error);
     }
   },
 

@@ -4,16 +4,28 @@ import { useAuthStore } from "../store/useAuthStore";
 import { Link } from "react-router-dom";
 import { FaRegUser } from "react-icons/fa";
 import { MdOutlineLogout } from "react-icons/md";
-
-import { useState } from "react";
+import { IoIosNotificationsOutline } from "react-icons/io";
+import { useState, useEffect } from "react";
 import { useChatStore } from "../store/useChatStore";
 
 export default function Navbar() {
   const [searchText, setSearchText] = useState("");
-  const [focused, setFocused] = useState(false);
+  const [focused, setFocused] = useState(0);
+  const [count, setCount] = useState(0);
   const { authUser, logout } = useAuthStore();
-  const { users, sendFriendRequest } = useChatStore();
+  const { users, sendFriendRequest, notifications } = useChatStore();
   const filteredUsers = users.filter((user) => user.name.includes(searchText));
+
+  useEffect(() => {
+    const countFn = () => {
+      notifications?.forEach((notification) => {
+        if (notification.isRead == false) {
+          setCount(count + 1);
+        }
+      });
+    };
+    countFn();
+  }, [notifications]);
 
   const sendRequest = (user) => {
     sendFriendRequest(user._id);
@@ -78,6 +90,20 @@ export default function Navbar() {
       {authUser && (
         <div className="flex justify-between items-center">
           <div className="flex justify-between items-center gap-7">
+            <Link
+              onClick={() => setCount(0)}
+              to="/notifications"
+              className="relative"
+            >
+              <IoIosNotificationsOutline size={28} />
+              {count.length && (
+                <p
+                  className={`  bg-red-500 rounded-full min-w-4 text-xs text-center  text-white absolute -right-2 -bottom-1`}
+                >
+                  {count}
+                </p>
+              )}
+            </Link>
             <Link
               to={"/profile"}
               className="font-bold flex  items-center gap-1"

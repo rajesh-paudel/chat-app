@@ -27,10 +27,19 @@ const userSchema = mongoose.Schema(
         ref: "User",
       },
     ],
+    notifications: [
+      {
+        type: String,
+      },
+    ],
     profilePic: {
       type: String,
       default: "",
     },
+    // Email verification fields
+    isVerified: { type: Boolean, default: false },
+    verificationToken: { type: String },
+    verificationTokenExpires: { type: Date },
   },
   {
     timestamps: true,

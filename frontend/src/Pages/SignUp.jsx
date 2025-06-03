@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import toast from "react-hot-toast";
 import { useAuthStore } from "../store/useAuthStore";
 import { Link } from "react-router-dom";
@@ -31,13 +31,22 @@ export default function SignUp() {
       toast.error("Password must be at least 6 character");
       return false;
     }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email.trim())) {
+      return toast.error("Enter a valid email"), false;
+    }
+
     return true;
   };
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
     if (validateForm()) {
-      signUp(formData);
-      navigate("/login");
+      const result = await signUp(formData);
+      if (result.success) {
+        navigate("/login");
+      } else {
+        toast.error(result.message);
+      }
     }
   };
 
@@ -46,7 +55,7 @@ export default function SignUp() {
       <h1 className="text-2xl font-bold">Create Account</h1>
       <p>Get started with your free Account</p>
       <form className="flex flex-col gap-1" onSubmit={onSubmit}>
-        Full Name
+        <label htmlFor="name">Full Name</label>
         <input
           className=" border-2 mb-5 border-stone-500 p-2 w-96 rounded-md bg-transparent"
           type="text"
@@ -56,7 +65,7 @@ export default function SignUp() {
           value={formData.name}
           onChange={onChange}
         ></input>
-        Email
+        <label htmlFor="email">Email</label>
         <input
           className=" border-2 mb-5  border-stone-500 p-2 w-96 rounded-md bg-transparent"
           type="email"
@@ -66,7 +75,7 @@ export default function SignUp() {
           value={formData.email}
           onChange={onChange}
         ></input>
-        Password
+        <label htmlFor="password">Password</label>
         <input
           className=" border-2 mb-5 border-stone-500 p-2 w-96 rounded-md bg-transparent"
           type="password"
@@ -84,7 +93,7 @@ export default function SignUp() {
         </button>
       </form>
       <p>
-        Aready have an account ?
+        Already have an account ?
         <Link to="/login" className="text-bold text-orange-300 ml-1">
           Sign In
         </Link>

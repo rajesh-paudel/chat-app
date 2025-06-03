@@ -6,12 +6,15 @@ import Sidebar from "../components/Sidebar";
 import { useEffect } from "react";
 
 export default function Home() {
-  const { selectedUser, authUser, getFriends, getFriendRequests } =
+  const { selectedUser, getUserInfo, getUsers, getNotifications } =
     useChatStore();
+
   useEffect(() => {
-    getFriendRequests();
-    getFriends();
+    getUserInfo();
+    getUsers();
+    getNotifications();
   }, []);
+
   return (
     <div className="pb-3 bg-base-200">
       <div className="flex items-center justify-center pt-5 px-4">

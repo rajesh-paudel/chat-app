@@ -2,6 +2,7 @@ import { Message } from "../models/message.model.js";
 import cloudinary from "../lib/cloudinary.js";
 import { getReceiverSocketId } from "../index.js";
 import { io } from "../index.js";
+import { Notification } from "../models/notification.model.js";
 
 //returns messages between loggedin user and selected user
 export const getMessages = async (req, res) => {
@@ -53,6 +54,32 @@ export const sendMessages = async (req, res) => {
     res.status(201).json(newMessage);
   } catch (error) {
     console.log("error in sendMessage", error);
+    res.status(500).json({ message: "internal server error" });
+  }
+};
+
+//handle fetch notifications
+export const fetchNotifications = async (req, res) => {
+  try {
+    const notifications = await Notification.find({ userId: req.user._id });
+    res.status(200).json(notifications);
+  } catch (error) {
+    console.log("error in fetch notifications", error);
+    res.status(500).json({ message: "internal server error" });
+  }
+};
+
+// mark read notifications
+export const readNotifications = async (req, res) => {
+  try {
+    const notifications = await Notification.find({ userId: req.user._id });
+    notifications?.map((notification) => {
+      notification.isRead = true;
+      notification.save();
+    });
+    res.status(200);
+  } catch (error) {
+    console.log("error mark read notifications", error);
     res.status(500).json({ message: "internal server error" });
   }
 };
