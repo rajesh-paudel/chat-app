@@ -22,8 +22,9 @@ import {
 } from "../controllers/message.controller.js";
 
 const router = express.Router();
+
 router.post("/signup", signup);
-router.get("/verify-email", verifyEmail);
+router.get("/verifyEmail", verifyEmail);
 router.post("/login", login);
 router.post("/logout", logout);
 router.put("/update-profile", protectRoute, updateProfile);

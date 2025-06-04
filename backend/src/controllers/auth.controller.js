@@ -52,14 +52,15 @@ export const signup = async (req, res) => {
       });
 
       // Construct verification URL
-      const verificationUrl = `http://localhost:5173/verify-email?token=${emailToken}`;
+      const verificationUrl = `http://localhost:3000/api/auth/verifyEmail?token=${emailToken}`;
 
       // Send email
       await transporter.sendMail({
         from: `"chat app" <${process.env.EMAIL_USER}>`,
         to: email,
         subject: "Verify your email",
-        html: `Click here to verify your email: <a href="${verificationUrl}">${verificationUrl}</a>`,
+        html: `Click here to verify your email: <a href="${verificationUrl}">
+        Verify</a>`,
       });
       res.status(201).json({
         message:
@@ -76,15 +77,14 @@ export const signup = async (req, res) => {
 //email verification controller
 export const verifyEmail = async (req, res) => {
   const { token } = req.query;
+
   try {
     const user = await User.findOne({
       verificationToken: token,
       verificationTokenExpires: { $gt: new Date() },
     });
     if (!user) {
-      return res
-        .status(400)
-        .json({ message: "Invalid or expired verification token." });
+      return res.status(400).send("Invalid or expired verification token.");
     }
 
     user.isVerified = true;
@@ -93,7 +93,7 @@ export const verifyEmail = async (req, res) => {
     await user.save();
     res.send("email verification successfull");
   } catch (error) {
-    res.status(500).json({ message: "internal server error" });
+    res.status(500).send("internal server error");
   }
 };
 
