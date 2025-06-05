@@ -1,4 +1,3 @@
-import React from "react";
 import { useChatStore } from "../store/useChatStore";
 import ChatContainer from "../components/ChatContainer";
 import NoChatSelected from "../components/NoChatSelected";

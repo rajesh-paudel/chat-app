@@ -1,4 +1,3 @@
-import React from "react";
 import { IoMdPersonAdd } from "react-icons/io";
 import { useAuthStore } from "../store/useAuthStore";
 import { Link } from "react-router-dom";
@@ -32,11 +31,14 @@ export default function Navbar() {
   };
   return (
     <div className="flex justify-between items-center px-10 py-1 mb-3">
-      <Link to={"/"} className="logo font-bold text-2xl">
+      <Link
+        to={"/"}
+        className="logo font-bold sm:text-xl md:text-2xl mx-5 whitespace-nowrap"
+      >
         Chat-app
       </Link>
       {authUser && (
-        <div className="w-full max-w-md relative">
+        <div className="w-full sm:w-1/2 min-w-60  max-w-sm relative">
           <input
             type="text"
             list="userList"
@@ -48,7 +50,7 @@ export default function Navbar() {
               }, 500);
             }}
             onChange={(e) => setSearchText(e.target.value)}
-            className="w-full input input-bordered text-white mb-1"
+            className="w-full input input-bordered text-slate-600 mb-1 outline-none bg-purple-200 h-8 rounded-md px-3"
             placeholder="Search people..."
           ></input>
           <div id="userList" className="absolute  w-full z-10">
@@ -89,7 +91,7 @@ export default function Navbar() {
       )}
       {authUser && (
         <div className="flex justify-between items-center">
-          <div className="flex justify-between items-center gap-7">
+          <div className="flex justify-between items-center md:gap-7 gap-3">
             <Link
               onClick={() => setCount(0)}
               to="/notifications"

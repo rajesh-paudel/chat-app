@@ -1,4 +1,3 @@
-import React from "react";
 import { Camera } from "lucide-react";
 import { useAuthStore } from "../store/useAuthStore";
 import { Link } from "react-router-dom";
@@ -24,7 +23,7 @@ export default function Profile({ user }) {
   };
   return (
     <div className="w-full flex flex-col justify-center items-center gap-10 rounded">
-      <div className=" w-1/3 bg-slate-900 p-5 flex flex-col items-center gap-2 rounded-md">
+      <div className=" w-1/3 bg-slate-900 p-5 flex flex-col items-center gap-2 rounded-md text-white">
         <h1 className="text-3xl font-bold ">Profile</h1>
         <p> profile information</p>
         <div>
@@ -95,7 +94,7 @@ export default function Profile({ user }) {
           </span>
         </Link>
       </div>
-      <div className=" w-1/3 bg-slate-900 p-5 gap-8 flex flex-col items-start rounded-md">
+      <div className=" w-1/3 bg-slate-900 text-white p-5 gap-8 flex flex-col items-start rounded-md">
         <h1 className="text-2xl font-bold">Account Information</h1>
         <div className=" w-full flex justify-between items-center pb-2 border-b-2">
           <p>Member since</p>
